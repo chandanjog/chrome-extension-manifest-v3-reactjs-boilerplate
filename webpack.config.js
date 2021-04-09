@@ -1,9 +1,14 @@
 const path = require("path");
 const webpack = require("webpack");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.js",
-  mode: "development",
+  entry: {
+    content: "./src/content.js",
+    background: "./src/background.js",
+    options: "./src/options.js"
+  },
+  // mode: "development",
   module: {
     rules: [
       {
@@ -22,7 +27,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist/"),
     publicPath: "/dist/",
-    filename: "bundle.js"
+    filename: "[name].bundle.js"
   },
   devServer: {
     contentBase: path.join(__dirname, "public/"),
@@ -30,5 +35,12 @@ module.exports = {
     publicPath: "http://localhost:3000/dist/",
     hotOnly: true
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new CopyPlugin({
+      patterns: [
+        { from: "public", to: "" }
+      ],
+    }),
+  ]
 };
